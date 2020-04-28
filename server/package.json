@@ -1,0 +1,19 @@
+{
+  "name": "pacificrp-ucp",
+  "version": "1.4.0",
+  "private": true,
+  "engines": {
+    "node": "12.16.x"
+  },
+  "scripts": {
+    "start": "node server.js",
+    "heroku-postbuild": ""
+  },
+  "dependencies": {
+    "bcryptjs": "^2.4.3",
+    "express": "^4.17.1",
+    "jsonwebtoken": "^8.5.1",
+    "mongodb": "^3.5.5",
+    "nodemailer": "^6.4.6"
+  }
+}

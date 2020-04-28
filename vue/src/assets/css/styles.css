@@ -1,0 +1,88 @@
+@import url(https://fonts.googleapis.com/css?family=Abel);
+
+html {
+  box-sizing: border-box;
+}
+*, *:before, *:after {
+  box-sizing: inherit;
+}
+
+::selection {
+  background: #042E59;
+  color: #f8f8f8;
+}
+
+body {
+  background-image: url(../img/los-santos-bg.jpg);
+  background-repeat: no-repeat;
+  background-size: cover;
+  font-family: Abel, sans-serif;
+}
+
+.nav.navbar-nav .nav-link {
+  color: rgba(255,255,255,0.5);
+}
+.nav.navbar-nav .nav-link.active {
+  color: rgba(255,255,255,0.9);
+}
+.nav .nav-link:hover:not(.active) {
+  color: #ddd;
+}
+
+.marginslide {
+  margin-bottom: -10px;
+}
+
+hr.solid {
+  border-top: 2px solid rgba(0,0,0,.1);
+}
+
+.pagination {
+  width: 80vw;
+}
+
+.pagination a {
+  color: black;
+  float: left;
+  padding: 3px 10px;
+  text-decoration: none;
+  transition: background-color .3s;
+  border: 1px solid #ddd;
+  margin: 0 4px;
+}
+
+.pagination a.active {
+  background-color: #042E59;
+  color: white;
+  border: 1px solid black;
+}
+
+.pagination a:hover:not(.active) {
+  background-color: #ddd;
+}
+
+div.solidnews {
+  border: 2px solid rgba(0,0,0,.1);
+}
+
+div.topnews {
+  border-top: 2px solid rgb(7,81,157);
+  /*border-radius: 8px;*/
+}
+
+.card-link {
+  text-decoration: none;
+  color: inherit;
+}
+.card {
+  margin-bottom: 20px;
+}
+
+.card > i {
+  color: #fff;
+  background-color: #042E59;
+  font-size: 70px;
+  padding: 10px 0;
+  margin-bottom: 10px;
+  text-align: center;
+}
