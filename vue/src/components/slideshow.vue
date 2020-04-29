@@ -4,17 +4,19 @@
       <div class="col" style="margin-top: 14px;">
         <div class="" style="height:232px; max-width:1200px ">
           <img
-            v-for='(slide, i) in slides'
+            v-for='i in 3'
+            :key='i'
             :class="{active: i == activeSlide}"
-            class="mySlides" :src="slide" style="width: 100%; height:100%" />
+            class="mySlides" :src="getImgUrl(i)" style="width: 100%; height:100%" />
           <div class="w3-container" style="width:100%">
             <div class="left" @click="left">&#10094;</div>
             <div class="right" @click="right">&#10095;</div>
             <span
               v-for='i in 3'
+              :key='i'
               class='bullet'
-              :class="{active: activeSlide == i-1}"
-              @click='slide(i-1)'
+              :class="{active: activeSlide == i}"
+              @click='slide(i)'
             ></span>
           </div>
         </div>
@@ -85,33 +87,32 @@
 </style>
 
 <script>
-import slide1 from '@/assets/img/slideshow-1.jpg'
-import slide2 from '@/assets/img/slideshow-2.jpg'
-import slide3 from '@/assets/img/slideshow-3.jpg'
-
 export default {
   data() {
     return {
-      slides: [slide1, slide2, slide3],
-      activeSlide: 0
+      activeSlide: 1
     }
   },
 
   methods: {
+    getImgUrl(i) {
+      return require(`../assets/img/slideshow-${i}.jpg`)
+    },
+
     slide(i) {
       this.activeSlide = i
     },
 
     left() {
       this.activeSlide--
-      if (this.activeSlide < 0)
-        this.activeSlide = 2
+      if (this.activeSlide < 1)
+        this.activeSlide = 3
     },
 
     right() {
       this.activeSlide++
-      if (this.activeSlide > 2)
-        this.activeSlide = 0
+      if (this.activeSlide > 3)
+        this.activeSlide = 1
     }
   }
 }

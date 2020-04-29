@@ -89,7 +89,7 @@
             type="email"
             name="password"
             required
-            placeholder="enter your password"
+            placeholder="Enter your e-mail"
             minlength='7'
           />
         </div>

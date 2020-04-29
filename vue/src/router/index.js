@@ -47,6 +47,9 @@ const router = new VueRouter({
 })
 
 router.beforeEach((to, from, next) => {
+  document.title = 'Pacific Roleplay'
+  document.title+= to.name? ' - '+to.name : ''
+
   if (to.meta.guest) {
     if (Vue.prototype.$user) {
       next('/')
