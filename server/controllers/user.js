@@ -78,23 +78,13 @@ exports.registerNewUser = async (req, res) => {
 
     let id = await db.insertData(account, "accounts")
 
-    try {
-      var info = await sendMail({
-        to: account.email,
-        subject: 'Pacific Roleplay E-mail Verification',
-        text: `Welcome, in order to play and access your control panel, first you need to verify your email, just click the link below.\n${req.protocol}://${req.get('host')}/verify/${id}`
-      })
-      
-    } catch (error) {
-      return res.json({
-        errors: {email: "Error! we couldn't send a verification email to you."}
-      })
-    }
-
-    // let payload = {username, email, created: account.created}
-    // let token = jwt.sign(payload, process.env.TOKEN_SECRET)
-    // db.updateDataByFieldMatch('username', username, {token}, 'accounts')
-    // res.status(201).json({token})
+    sendMail({
+      to: account.email,
+      subject: 'Pacific Roleplay E-mail Verification',
+      text: `Welcome, in order to play and access your control panel, first you need to verify your email, just click the link below.\n${req.protocol}://${req.get('host')}/verify/${id}`
+    }).catch((err) => {
+      console.log('Couldnt send verify mail', err.message)
+    })
 
     res.status(201).end()
   }

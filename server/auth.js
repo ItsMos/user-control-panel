@@ -6,7 +6,6 @@ module.exports = (req, res, next) => {
     req.userData = jwt.verify(token, process.env.TOKEN_SECRET)
     next()
   } catch (err) {
-    res.status(401).redirect('/login')
-    // res.redirect('/login')
+    res.status(401).redirect('/')
   }
 };
