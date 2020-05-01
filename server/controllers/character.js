@@ -1,27 +1,7 @@
-const db = require("../database")
-
-exports.createCharacter = async (req, res)=> {
-  let { username, quizPassed } = req.userData
-  if (quizPassed === false) return res.end()
-  let user = await db.fetchData('username', username, 'accounts')
-  let char = req.body.character
-  if (!char || !char.name || !char.age || !char.gender)
-    return res.sendStatus(403)
-
-  console.log(user.characters.length)
-  await db.db.collection('accounts').updateOne(
-    {username},
-    {
-      $push: {
-        characters: char
-      }
-    }
-  )
-  res.end()
-}
+const {db, ObjectID} = require("../db")
 
 exports.getCharacters = async (req, res)=> {
-  let { username } = req.userData
-  let user = await db.fetchData('username', username, 'accounts')
-  res.json({characters: user.characters})
+  let { id } = req.userData
+  let characters = await db.characters.find({ownerId: new ObjectID(id)}).toArray()
+  res.json({characters})
 }
