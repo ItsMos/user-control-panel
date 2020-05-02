@@ -14,6 +14,6 @@ router.get('/verify/:id', userController.verifyEmail)
 
 router.get('/getcharacters', auth, characters.getCharacters)
 
-// router.post('/character', auth, characters.createCharacter)
+router.get('/stats', auth, userController.getStats)
 
 module.exports = router

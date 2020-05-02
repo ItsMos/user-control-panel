@@ -160,6 +160,20 @@ exports.verifyEmail = async (req, res)=> {
   }
 }
 
+exports.getStats = async (req, res)=> {
+  let { id } = req.userData
+  let characters = await db.characters.find({ownerId: new ObjectID(id)},
+    {$projection: {
+      hoursPlayed: 1
+    }}
+  ).toArray()
+  
+  let totalPlayTime = characters.reduce((a,b) => (a.hoursPlayed + b.hoursPlayed) || 0)
+  res.json({
+    totalPlayTime
+  })
+}
+
 exports.getUserDetails = async (req, res) => {
   await res.json(req.userData)
 };
