@@ -3,6 +3,31 @@ const jwt = require('jsonwebtoken')
 const sendMail = require('../mail')
 const {db, ObjectID} = require('../db')
 
+exports.validateToken = async (req, res)=> {
+  try {
+    let token = req.body.token
+    let data = jwt.verify(token, process.env.TOKEN_SECRET)
+    // token is OK
+    let account = await db.accounts.findOne({_id: new ObjectID(data.id)})
+    
+    if (!account) {
+      throw new Error('token invalid')
+    }
+
+    // check if user is banned
+    // if (account.banned) {
+    //   res.status(403).json({banned: true})
+    // }
+    let payload = {username: account.username, created: account.created, quizPassed: account.quizPassed, id: account._id}
+    token = jwt.sign(payload, process.env.TOKEN_SECRET)
+    res.json({token})
+
+  } catch (error) {
+    // token invalid
+    res.sendStatus(401)
+  }
+}
+
 exports.registerNewUser = async (req, res) => {
   let username = req.body.username,
     email = req.body.email

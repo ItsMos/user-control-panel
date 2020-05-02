@@ -4,6 +4,8 @@ const userController = require('./controllers/user')
 const characters = require('./controllers/character')
 const auth = require('./auth')
 
+router.post('/validateToken', userController.validateToken)
+
 router.post('/login', userController.loginUser)
 
 router.post('/register', userController.registerNewUser)

@@ -1,4 +1,3 @@
-// require('./db')
 const http = require('http');
 const https = require('https');
 const express = require('express');
@@ -7,7 +6,6 @@ const path = require('path')
 const bodyParser = require('body-parser');
 const app = express();
 app.use(bodyParser.json());
-const auth = require('./auth')
 
 process.env.TOKEN_SECRET = '6ffda691-5b98-4c3f-a955-9c88559f5e37'
 
