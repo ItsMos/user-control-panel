@@ -7,7 +7,15 @@
       </strong>
     </h2>
     <hr />
-    <div style="margin: 0 15px;">
+
+    <section
+      v-if='user.quizPassed === false' 
+      class='alert alert-primary text-center mt-5 mb-5'>
+      Hello, please take this roleplay quiz to be able to play 
+      <router-link class='btn btn-primary' to='/ucp/quiz'>Take Quiz</router-link>
+    </section>
+
+    <div v-else style="margin: 0 15px;">
       <div class="row">
         <div class="col-sm-4">
           <router-link class='card-link' to="/ucp/characters">
@@ -62,8 +70,14 @@
 
 <script>
 export default {
-  mounted() {
+  created() {
     this.user = this.$user
+  },
+
+  data() {
+    return {
+      user: null
+    }
   }
 }
 </script>

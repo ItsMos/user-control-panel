@@ -2,10 +2,10 @@
   <div class="sidebar">
     <div v-if="logged" class="userview border rounded-0 shadow">
       <div class="header">
-        <h1 class="text-center">WELCOME BACK, {{user.username.toUpperCase()}}</h1>
+        <h1 class="text-center">WELCOME BACK, {{user.username}}</h1>
       </div>
       <h3>
-        <i class="fa fa-clock-o"></i>Hours Played: N/A
+        <i class="fa fa-clock-o"></i>Hours Played: {{user.stats.totalPlayTime || 0}}
         <br />
       </h3>
       <h3>
@@ -145,7 +145,7 @@ i.fa {
 import VueJwtDecode from "vue-jwt-decode"
 
 export default {
-  mounted() {
+  async created() {
     this.user = this.$user
     if (this.user)
       this.logged = true
@@ -193,16 +193,22 @@ export default {
         Object.keys(response.errors).forEach(err => {
           this.$notify({ text: response.errors[err], color: "danger" })
         });
+
       } else {
         if (response.token) {
           this.$notify({
             text: "Successfully logged in",
             color: "primary"
           })
-          localStorage.setItem("jwt", response.token)
+          localStorage.token = response.token
           this.$user = await VueJwtDecode.decode(response.token)
+          let stats = await fetch("/stats", {
+            headers: { "Content-Type": "application/json", Authorization: localStorage.token }
+          })
+          this.$user.stats = await stats.json()
           this.logged = true
           this.user = this.$user
+          
           if (this.$route.meta && this.$route.meta.guest) {
             this.$router.go()
           }
@@ -211,7 +217,7 @@ export default {
     },
 
     logout() {
-      localStorage.jwt = null
+      delete localStorage.token
       this.$router.go()
     }
   },

@@ -1,0 +1,73 @@
+[
+  {
+    "q": "What is a good example that explains the roleplay term powergaming?",
+    "a": [
+      "/me does not get injured by the gunshot wounds.",
+      "Takes out his wallet and handles some money to John Doe.",
+      "/me does a wheelie on his BMX.",
+      "/me discharges his gun at the individual."
+    ], "correct": 0  },
+
+  {
+    "q": "What should you do when an admin is talking to you?",
+    "a": [
+      "Stop whatever I'm doing and listen.",
+      "Ignore the admin, I've done nothing wrong.",
+      "Quit immediately.",
+      "Tell him that you're busy roleplaying."
+    ], "correct": 0  },
+
+  {
+    "q": "What is a good example that explains how to use /report?",
+    "a": [
+      "/report Can you please help me? My vehicle just flipped due to a map bug.",
+      "/report How to interact with my vehicle?",
+      "/report Help me, now.",
+      "/report Please, ban ID 11."
+    ], "correct": 0  },
+
+  {
+    "q": "What is a good example that explains the roleplay term metagaming?",
+    "a": [
+      "/pm 51 Come at Paleto Bay, they want to kill me.",
+      "/b Let's wait for administrators to come",
+      "/pm 119 I have to go, brb.",
+      "/pm 97 Hey dude, read your discord dms."
+    ], "correct": 0  },
+
+  {
+    "q": "What is a good example that explains how to use /me?",
+    "a": [
+      "/me takes out his wallet from his trousers pocket, takes out some money and handles it to William.",
+      "/me punches William and runs away.",
+      "/me takes out his Desert Eagle and starts shooting to everyone.",
+      "/me brb."
+    ], "correct": 0  },
+  
+  {
+    "q": "What do you do if you see someone break the rules?",
+    "a": [
+      "Screenshot and report the player in-game using /report",
+      "Ignore him and move on.",
+      "Watch him without doing anything.",
+      "Chase and kill him."
+    ], "correct": 0  },
+  
+  {
+    "q": "How do you speak in OOC properly?",
+    "a": [
+      "Use /b to speak in local OOC.",
+      "Use the regular local chat and speak normally.",
+      "Say \"OOC\" at the start of the sentence.",
+      "Add brackets and use the regular chat."
+    ], "correct": 0  },
+  
+  {
+    "q": "Which answer best portrays fear RP?",
+    "a": [
+      "/me sees the officers pointing guns at him, he steps back assessing the situation as he slowly raises his hands.",
+      "/me sees the officers pointing guns at him. He runs towards one of the officers trying to punch him in the face.",
+      "/me sees the officers pointing guns at him and reaches towards his waistband pulling out his pistol and returning fire.",
+      "/me sees the officers pointing guns at him. He starts walking towards them laughing as he shouts \"You won't shoot me!\""
+    ], "correct": 0  }
+]

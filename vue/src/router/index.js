@@ -1,10 +1,12 @@
 import Vue from 'vue'
 import VueRouter from 'vue-router'
-import Main from '../views/Main.vue'
+
+import Main from '@/views/Main.vue'
 import Home from '@/views/Home.vue'
 import register from '@/views/register.vue'
 import ucp from '@/views/ucp.vue'
 import characters from '@/views/characters.vue'
+import quiz from '@/views/quiz.vue'
 
 Vue.use(VueRouter)
 
@@ -35,6 +37,12 @@ Vue.use(VueRouter)
         path: '/ucp/characters',
         name: 'Characters',
         component: characters,
+        meta: {private: true}
+      },
+      {
+        path: '/ucp/quiz',
+        name: 'Quiz',
+        component: quiz,
         meta: {private: true}
       }
     ]

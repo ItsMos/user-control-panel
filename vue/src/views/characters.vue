@@ -17,8 +17,8 @@
             <div class="card border rounded-0 shadow">
               <h3 class='charName'>{{char.name}}</h3>
               <h5>Age: {{char.age}}</h5>
-              <h5>Money: N/A</h5>
-              <h5>Bank Money: N/A</h5>
+              <h5>Cash: {{char.cash}}</h5>
+              <h5>Bank Money: {{char.bank}}</h5>
               <button
                 class="btn btn-light btn-block btn-sm"
                 type="button"
@@ -45,13 +45,14 @@
 
 <script>
 export default {
-  async mounted() {
+  async created() {
     let ajax = await fetch("/getcharacters", {
-      headers: { "Content-Type": "application/json", Authorization: localStorage.jwt }
+      headers: { "Content-Type": "application/json", Authorization: localStorage.token }
     })
 
     ajax = await ajax.json()
     this.characters = ajax.characters
+    console.log(this.characters)
   },
 
   data() {
