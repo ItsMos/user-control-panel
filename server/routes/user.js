@@ -3,7 +3,10 @@ const jwt = require('jsonwebtoken')
 const sendMail = require('../mail')
 const {db, ObjectID} = require('../db')
 
-exports.validateToken = async (req, res)=> {
+let auth = require('./auth')
+let router = require('express').Router()
+
+router.post('/validateToken', async (req, res)=> {
   try {
     let token = req.body.token
     let data = jwt.verify(token, process.env.TOKEN_SECRET)
@@ -19,6 +22,7 @@ exports.validateToken = async (req, res)=> {
     //   res.status(403).json({banned: true})
     // }
     let payload = {username: account.username, created: account.created, quizPassed: account.quizPassed, id: account._id}
+    
     token = jwt.sign(payload, process.env.TOKEN_SECRET)
     res.json({token})
 
@@ -26,9 +30,9 @@ exports.validateToken = async (req, res)=> {
     // token invalid
     res.sendStatus(401)
   }
-}
+})
 
-exports.registerNewUser = async (req, res) => {
+router.post('/register', async (req, res) => {
   let username = req.body.username,
     email = req.body.email
   
@@ -112,9 +116,9 @@ exports.registerNewUser = async (req, res) => {
 
     res.status(201).end()
   }
-};
+})
 
-exports.loginUser = async (req, res) => {
+router.post('/login', async (req, res) => {
   try {
     const username = req.body.username;
     const password = req.body.password;
@@ -144,9 +148,9 @@ exports.loginUser = async (req, res) => {
     console.error(err)
     res.status(400).json({ err: err })
   }
-}
+})
 
-exports.verifyEmail = async (req, res)=> {
+router.get('/verify/:id', async (req, res)=> {
   let id = req.params.id
   if (id.length < 24) return res.end('invalid')
   let result = await db.accounts.findOne({_id: new ObjectID(id)})
@@ -158,22 +162,25 @@ exports.verifyEmail = async (req, res)=> {
   } else {
     res.end('invalid')
   }
-}
+})
 
-exports.getStats = async (req, res)=> {
+router.get('/stats', auth, async (req, res)=> {
   let { id } = req.userData
   let characters = await db.characters.find({ownerId: new ObjectID(id)},
     {$projection: {
       hoursPlayed: 1
     }}
   ).toArray()
-  
-  let totalPlayTime = characters.reduce((a,b) => (a.hoursPlayed + b.hoursPlayed) || 0)
-  res.json({
-    totalPlayTime
-  })
-}
 
-exports.getUserDetails = async (req, res) => {
-  await res.json(req.userData)
-};
+  if (characters && characters.length > 0) {
+    let totalPlayTime = characters.reduce((a,b) => (a.hoursPlayed + b.hoursPlayed) || 0)
+    res.json({
+      totalPlayTime
+    })
+  
+  } else {
+    res.json({})
+  }
+})
+
+module.exports = router

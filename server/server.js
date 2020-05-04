@@ -9,9 +9,7 @@ app.use(bodyParser.json());
 
 process.env.TOKEN_SECRET = '6ffda691-5b98-4c3f-a955-9c88559f5e37'
 
-function sendVue(res) {
-  res.sendFile(path.resolve('public/index.html'))
-}
+let sendVue = (res) => res.sendFile(path.resolve('public/index.html'))
 
 const routes = require('./routes')
 app.use(routes)
