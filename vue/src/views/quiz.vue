@@ -89,12 +89,12 @@
 <script>
 export default {
   async created() {
-    this.state = await this.ajax('/quizState')
+    this.state = await ajax('/quizState')
     
     if (this.state.quizPassed)
       return this.$router.push('/ucp')
     
-    this.questions = await this.ajax('/quiz')
+    this.questions = await ajax('/quiz')
   },
 
   data() {

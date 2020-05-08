@@ -8,7 +8,7 @@ Vue.config.productionTip = false
 
 Vue.use(notifications)
 
-Vue.prototype.ajax = async(path, body, method = 'GET') => {
+window.ajax = async(path, body, method = 'GET') => {
   let res = await fetch(path, {
     method: method.toUpperCase(),
     headers: { "Content-Type": "application/json", Authorization: localStorage.token },
@@ -56,10 +56,7 @@ async function init() {
   try {
     let data = await refreshToken()
     if (data) {
-      let stats = await fetch("/stats", {
-        headers: { "Content-Type": "application/json", Authorization: localStorage.token }
-      })
-      data.stats = await stats.json()
+      data.stats = await ajax("/stats")
     }
 
     Vue.prototype.$user = data

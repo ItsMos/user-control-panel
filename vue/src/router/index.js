@@ -31,19 +31,28 @@ Vue.use(VueRouter)
         path: 'ucp',
         name: 'UCP',
         component: ucp,
-        meta: {private: true}
+        meta: {
+          private: true,
+          roles: '*'
+        }
       },
       {
         path: '/ucp/characters',
         name: 'Characters',
         component: characters,
-        meta: {private: true}
+        meta: {
+          private: true,
+          roles: '*'
+        }
       },
       {
         path: '/ucp/quiz',
         name: 'Quiz',
         component: quiz,
-        meta: {private: true}
+        meta: {
+          private: true,
+          roles: '*'
+        }
       }
     ]
   }
@@ -67,7 +76,14 @@ router.beforeEach((to, from, next) => {
   
   } else if (to.meta.private) {
     if (Vue.prototype.$user) {
-      next()
+      let userRole = Vue.prototype.$user.role
+      if (to.meta.roles == '*' || to.meta.roles.some(r => r == userRole)) {
+        next()
+        
+      } else {
+        next('/ucp')
+      }
+
     } else {
       next('/')
     }

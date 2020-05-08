@@ -202,10 +202,7 @@ export default {
           })
           localStorage.token = response.token
           this.$user = await VueJwtDecode.decode(response.token)
-          let stats = await fetch("/stats", {
-            headers: { "Content-Type": "application/json", Authorization: localStorage.token }
-          })
-          this.$user.stats = await stats.json()
+          this.$user.stats = await ajax('/stats')
           this.logged = true
           this.user = this.$user
           

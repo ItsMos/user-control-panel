@@ -6,25 +6,38 @@ const {db, ObjectID} = require('../db')
 let auth = require('./auth')
 let router = require('express').Router()
 
+/**
+ * 
+ * @param {String} id - The id or the account object
+ */
+async function genrateToken(id) {
+  let account = typeof id == 'string'? await db.accounts.findOne({_id: new ObjectID(id)}) : id
+    
+  if (!account) return
+
+  // check if user is banned
+  // if (account.banned) {
+  //   res.status(403).json({banned: true})
+  // }
+  let payload = {
+    username: account.username,
+    created: account.created,
+    quizPassed: account.quizPassed,
+    id: account._id,
+    role: account.role
+  }
+  
+  return jwt.sign(payload, process.env.TOKEN_SECRET)
+}
+
 router.post('/validateToken', async (req, res)=> {
   try {
     let token = req.body.token
     let data = jwt.verify(token, process.env.TOKEN_SECRET)
     // token is OK
-    let account = await db.accounts.findOne({_id: new ObjectID(data.id)})
-    
-    if (!account) {
-      throw new Error('token invalid')
-    }
-
-    // check if user is banned
-    // if (account.banned) {
-    //   res.status(403).json({banned: true})
-    // }
-    let payload = {username: account.username, created: account.created, quizPassed: account.quizPassed, id: account._id}
-    
-    token = jwt.sign(payload, process.env.TOKEN_SECRET)
-    res.json({token})
+    let newToken = await genrateToken(data.id)
+    if (!newToken) throw new Error('invalid token')
+    res.json({token: newToken})
 
   } catch (error) {
     // token invalid
@@ -101,6 +114,7 @@ router.post('/register', async (req, res) => {
       email,
       verified: false,
       quizPassed: false,
+      role: '',
       created: Date.now()
     }
 
@@ -140,8 +154,7 @@ router.post('/login', async (req, res) => {
       }})
     }
 
-    let payload = {username, created: user.created, quizPassed: user.quizPassed, id: user._id}
-    const token = jwt.sign(payload, process.env.TOKEN_SECRET)
+    const token = await genrateToken(user)
     res.status(201).json({ token })
 
   } catch (err) {

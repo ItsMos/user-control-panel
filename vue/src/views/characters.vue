@@ -46,13 +46,8 @@
 <script>
 export default {
   async created() {
-    let ajax = await fetch("/getcharacters", {
-      headers: { "Content-Type": "application/json", Authorization: localStorage.token }
-    })
-
-    ajax = await ajax.json()
-    this.characters = ajax.characters
-    console.log(this.characters)
+    let res = await ajax('/getcharacters')
+    this.characters = res.characters
   },
 
   data() {

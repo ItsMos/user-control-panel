@@ -16,7 +16,7 @@
     </section>
 
     <div v-else style="margin: 0 15px;">
-      <div class="row">
+      <div class="row justify-content-center">
         <div class="col-sm-4">
           <router-link class='card-link' to="/ucp/characters">
             <div class="card border rounded-0 shadow">
@@ -47,8 +47,8 @@
             </div>
           </router-link>
         </div>
-        <div class="col-sm-4">
-          <router-link class='card-link' to="#">
+        <div class="col-sm-4" v-if="this.$user.role == 'admin'">
+          <router-link class='card-link' to="/ucp/admin">
             <div class="card border rounded-0 shadow">
               <i class="fa fa-shield"></i>
               <h1 class="text-center" style="font-size: 15px;">
