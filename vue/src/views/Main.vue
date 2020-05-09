@@ -2,7 +2,8 @@
   <div class="wrapper">
     <notifications></notifications>
     <navbar></navbar>
-    <slideshow/>
+    <slideshow v-if="$route.name === 'Home'" />
+    
     <div class="container shadow" style="background: #fff;">
       <div class="row">
         <main class="col-lg-9 order-2 order-lg-1">

@@ -15,10 +15,12 @@
         <div class="collapse navbar-collapse" id="navcol-1">
           <ul class="nav navbar-nav">
             <li class="nav-item" role="presentation">
-              <a
-                class="nav-link active text-uppercase"
-                href="/"
-              >Home</a>
+              <router-link
+                to="/"
+                :class="$route.path == '/'? 'active' : ''"
+                class="nav-link text-uppercase">
+                Home
+              </router-link>
             </li>
             <li class="nav-item" role="presentation">
               <a
@@ -49,6 +51,7 @@
 header {
   background-color: #042E59;
   font-family: Abel, sans-serif;
+  margin-bottom: 25px;
 }
 
 .nav-link:focus {

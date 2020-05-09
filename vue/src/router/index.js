@@ -3,17 +3,12 @@ import VueRouter from 'vue-router'
 
 import Main from '@/views/Main.vue'
 import Home from '@/views/Home.vue'
-import register from '@/views/register.vue'
-import ucp from '@/views/ucp.vue'
-import characters from '@/views/characters.vue'
-import quiz from '@/views/quiz.vue'
 
 Vue.use(VueRouter)
 
   const routes = [
   {
     path: '/',
-    name: 'Main',
     component: Main,
     children: [
       {
@@ -24,35 +19,33 @@ Vue.use(VueRouter)
       {
         path: 'register',
         name: 'Register',
-        component: register,
+        component: ()=> import('@/views/register.vue'),
         meta: {guest: true}
       },
       {
         path: 'ucp',
-        name: 'UCP',
-        component: ucp,
-        meta: {
-          private: true,
-          roles: '*'
-        }
-      },
-      {
-        path: '/ucp/characters',
-        name: 'Characters',
-        component: characters,
-        meta: {
-          private: true,
-          roles: '*'
-        }
-      },
-      {
-        path: '/ucp/quiz',
-        name: 'Quiz',
-        component: quiz,
-        meta: {
-          private: true,
-          roles: '*'
-        }
+        component: ()=> import('@/views/ucp/default.vue'),
+
+        children: [
+          {
+            path: '',
+            name: 'UCP',
+            component: ()=> import('@/views/ucp/ucp.vue'),
+            meta: {private: true}
+          },
+          {
+            path: 'characters',
+            name: 'Characters',
+            component: ()=> import('@/views/ucp/characters.vue'),
+            meta: {private: true}
+          },
+          {
+            path: 'quiz',
+            name: 'Quiz',
+            component: ()=> import('@/views/ucp/quiz.vue'),
+            meta: {private: true}
+          }
+        ]
       }
     ]
   }
@@ -77,7 +70,7 @@ router.beforeEach((to, from, next) => {
   } else if (to.meta.private) {
     if (Vue.prototype.$user) {
       let userRole = Vue.prototype.$user.role
-      if (to.meta.roles == '*' || to.meta.roles.some(r => r == userRole)) {
+      if (!to.meta.roles || to.meta.roles.some(r => r == userRole)) {
         next()
         
       } else {
