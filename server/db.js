@@ -1,43 +1,26 @@
-const mongodb = require("mongodb");
-const MongoClient = mongodb.MongoClient;
-const ObjectID = mongodb.ObjectID;
+const fs = require('fs')
+const mongoose = require('mongoose')
 
-/** @type {mongodb.Db} Main connection */
+mongoose.connect('mongodb://localhost:27017/pacificrp', {useNewUrlParser: true, useUnifiedTopology: true})
+  .catch(e => console.error('DB connection error!', e.message))
+
+mongoose.connection.on('error', e=> console.error('DB error:', e.message))
+
+/**
+ * @description Has all the models in the lib/models folder
+ */
 let db = {}
 
-async function prepareCollections(database) {
-  let collections = await database.collections()
-  collections.forEach(async col => {
-    col.popArray = async function (query, arr, pos) {
-      await col.updateOne(query, {
-        $unset: {
-          [`${arr}.${pos}`]: 1
-        }
-      })
-      return await col.updateOne(query, {
-        $pull: {
-          [arr]: null
-        }
-      })
-    }
+mongoose.connection.once('open', ()=> {
+  console.log('> Connected to DB')
+  // load schemas
+  fs.readdirSync('./models').forEach(file => {
+    let model = require('./models/'+file)
+    // remvoe .js
+    file = file.substr(0, file.length-3)
+    db[file] = model
 
-    db[col.collectionName] = col
   })
-}
-
-let client = new MongoClient('mongodb://localhost:27017', {
-  useUnifiedTopology: true,
-  useNewUrlParser: true
-})
-client.connect(async err => {
-  if (err) {
-    console.error('DB connection error: ', err.message)
-    return;
-  }
-  console.log('Conneceted to DB')
-  
-  let db = client.db('pacificrp')
-  prepareCollections(db)
 })
 
-module.exports = {db, ObjectID}
+module.exports = db

@@ -1,18 +1,18 @@
 const bcrypt = require("bcryptjs");
 const jwt = require('jsonwebtoken')
 const sendMail = require('../mail')
-const {db, ObjectID} = require('../db')
+const db = require('../db')
 
 let auth = require('./auth')
 let router = require('express').Router()
 
 /**
  * 
- * @param {String} id - The id or the account object
+ * @param {String} _id - The id or the account object
  */
-async function genrateToken(id) {
-  let account = typeof id == 'string'? await db.accounts.findOne({_id: new ObjectID(id)}) : id
-    
+async function genrateToken(_id) {
+  let account = typeof _id == 'string'? await db.accounts.findOne({_id}) : _id
+
   if (!account) return
 
   // check if user is banned
@@ -26,7 +26,7 @@ async function genrateToken(id) {
     id: account._id,
     role: account.role
   }
-  
+
   return jwt.sign(payload, process.env.TOKEN_SECRET)
 }
 
@@ -57,7 +57,7 @@ router.post('/register', async (req, res) => {
     })
   }
 
-  if (username.length < 3) {
+  if (username.length < 3 || username.length > 16) {
     return res.json({
       errors: {
         username: "Username must be at least 3 characters and 16 at most"
@@ -91,8 +91,9 @@ router.post('/register', async (req, res) => {
 
   let result = await db.accounts.find({
     $or: [{username: username}, { email: email}]
-  }).toArray()
-  if (result.length > 0) {
+  })
+
+  if (result && result.length > 0) {
     if (username == result[0].username) {
       return res.json({
         errors: {
@@ -166,9 +167,9 @@ router.post('/login', async (req, res) => {
 router.get('/verify/:id', async (req, res)=> {
   let id = req.params.id
   if (id.length < 24) return res.end('invalid')
-  let result = await db.accounts.findOne({_id: new ObjectID(id)})
+  let result = await db.accounts.findOne({_id: id})
   if (result && result.verified === false) {
-    await db.accounts.updateOne({_id: new ObjectID(id)}, {
+    await db.accounts.updateOne({_id: id}, {
       $unset: {verified: ''}
     })
     res.redirect('/')
@@ -179,11 +180,7 @@ router.get('/verify/:id', async (req, res)=> {
 
 router.get('/stats', auth, async (req, res)=> {
   let { id } = req.userData
-  let characters = await db.characters.find({ownerId: new ObjectID(id)},
-    {$projection: {
-      hoursPlayed: 1
-    }}
-  ).toArray()
+  let characters = await db.characters.find({ownerId: id}, 'hoursPlayed')
 
   if (characters && characters.length > 0) {
     let totalPlayTime = characters.reduce((a,b) => (a.hoursPlayed + b.hoursPlayed) || 0)

@@ -1,15 +1,13 @@
 let auth = require('./auth')
 let router = require('express').Router()
-const {db, ObjectID} = require('../db')
+const db = require('../db')
 
 const numberOfQuestions = 5
 const quiz = require('../data/quiz')
 const quiz2 = require('../data/quiz2')
 
-async function getQuizPropsForAccount(id) {
-  return await db.accounts.findOne({_id: new ObjectID(id)},
-    {$projection: {quizPassed: 1, quizSubmitted: 1, lastQuizAttempt: 1}}
-  )
+async function getQuizPropsForAccount(_id) {
+  return await db.accounts.findOne({_id}, 'quizPassed quizSubmitted lastQuizAttempt')
 }
 
 router.get('/quizState', auth, async (req, res)=> {
@@ -51,9 +49,7 @@ router.get('/quiz', auth, async (req, res)=> {
   }
   res.json(randomized)
 
-  db.accounts.updateOne({_id: new ObjectID(req.userData.id)}, {
-    $set: {lastQuizAttempt: Date.now()}
-  })
+  await db.accounts.updateOne({_id: req.userData.id}, {lastQuizAttempt: Date.now()})
 })
 
 router.post('/quiz', auth, async (req, res)=> {
@@ -96,12 +92,9 @@ router.post('/quiz', auth, async (req, res)=> {
 router.get('/quiz2', auth, async (req, res)=> {
   let {quizPassed, quizSubmitted, lastQuizAttempt} = await getQuizPropsForAccount(req.userData.id)
 
-  if (quizPassed !== false)
-    return res.sendStatus(403)
-  if (!lastQuizAttempt)
-    return res.sendStatus(403)
-  if (quizSubmitted)
-    return res.sendStatus(403)
+  if (!lastQuizAttempt) return res.sendStatus(403)
+  if (quizSubmitted) return res.sendStatus(403)
+  if (quizPassed !== false) return res.sendStatus(403)
 
   res.json(quiz2)
 })
@@ -122,19 +115,20 @@ router.post('/quiz2', auth, async (req, res)=> {
   for (let q in answers) arr.push(answers[q])
 
   if (!quizSubmitted) {
-    await db.applications.insertOne({
-      _id: new ObjectID(req.userData.id),
+    let app = await new db.applications({
+      _id: req.userData.id,
       questions: Object.keys(answers).map(n => Number(n)),
       answers: arr
     })
+    app.save()
 
-    await db.accounts.updateOne({_id: new ObjectID(req.userData.id)}, {
-      $set: {quizSubmitted: true}
+    await db.accounts.updateOne({_id: req.userData.id}, {
+      quizSubmitted: true
     })
 
   } else {
     await db.applications.updateOne({
-      _id: new ObjectID(req.userData.id)
+      _id: req.userData.id
     }, {
       questions: Object.keys(answers).map(n => Number(n)),
       answers: arr
