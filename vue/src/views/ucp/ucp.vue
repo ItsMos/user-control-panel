@@ -5,7 +5,7 @@
       <div class="card border rounded-0 shadow">
         <i class="fa fa-users"></i>
         <h1 class="text-center" style="font-size: 15px;">
-          <strong>Manage Characters</strong>
+          <strong>My Characters</strong>
         </h1>
         <button
           class="btn btn-light btn-block btn-sm"

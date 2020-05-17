@@ -31,13 +31,13 @@
             <li class="nav-item" role="presentation">
               <a
                 class="nav-link text-uppercase"
-                href="#"
+                
               >Donations</a>
             </li>
             <li class="nav-item" role="presentation">
               <a
                 class="nav-link text-uppercase"
-                href="#"
+                
               >SERVER INFORMATION</a>
             </li>
           </ul>

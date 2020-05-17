@@ -24,12 +24,12 @@ Vue.use(VueRouter)
       },
       {
         path: 'ucp',
+        name: 'UCP',
         component: ()=> import('@/views/ucp/default.vue'),
 
         children: [
           {
             path: '',
-            name: 'UCP',
             component: ()=> import('@/views/ucp/ucp.vue'),
             meta: {private: true}
           },
@@ -44,6 +44,32 @@ Vue.use(VueRouter)
             name: 'Quiz',
             component: ()=> import('@/views/ucp/quiz.vue'),
             meta: {private: true}
+          },
+          {
+            path: 'admin',
+            name: 'Admin',
+            meta: {
+              private: true,
+              roles: ['admin', 'tester']
+            },
+            component: ()=> import('@/views/ucp/adminIndex.vue'),
+
+            children: [
+              {
+                path: '',
+                component: ()=> import('@/views/ucp/adminHome.vue')
+              },
+              {
+                path: 'apps',
+                name: 'Applications',
+                component: ()=> import('@/views/ucp/adminApps.vue')
+              },
+              {
+                path: 'app/:id',
+                name: 'Player Application',
+                component: ()=> import('@/views/ucp/adminApp.vue')
+              }
+            ]
           }
         ]
       }
@@ -58,8 +84,11 @@ const router = new VueRouter({
 
 router.beforeEach((to, from, next) => {
   document.title = 'Pacific Roleplay'
-  document.title+= to.name? ' - '+to.name : ''
-
+  if (to.name)
+    document.title += ' - ' + to.name
+  else if (to.matched && to.matched[to.matched.length - 2])
+    document.title += ' - ' + to.matched[to.matched.length - 2].name
+  
   if (to.meta.guest) {
     if (Vue.prototype.$user) {
       next('/')
